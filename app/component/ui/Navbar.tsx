@@ -2,10 +2,18 @@ import React from "react";
 import Button from "./Button";
 import ShareIcon from "../icons/share";
 import PlusIcon from "../icons/plus";
+import Image from "next/image";
+import { getServerSession } from "next-auth";
 
 type Props = {};
 
-const Navbar = (props: Props) => {
+async function getSession() {
+  const session = await getServerSession();
+  return session;
+}
+
+const Navbar = async (props: Props) => {
+  const session = await getSession();
   return (
     <div className="flex justify-between items-center mt-8 w-full  ">
       <p className="text-xl font-extrabold ">All Notes</p>
@@ -32,6 +40,20 @@ const Navbar = (props: Props) => {
           Icon={<PlusIcon />}
           gap="2"
         />
+        {/* Avatar */}
+        {session ? (
+          <div>
+            {/* <Image
+            src="https://emojiisland.com/cdn/shop/products/Emoji_Icon_-_Sunglasses_cool_emoji_large.png?v=1571606093"
+            alt="avatar"
+            width={40}
+            height={40} */}
+            {/* /> */}
+            <p>{session.user?.name}</p>
+          </div>
+        ) : (
+          <p>Signup</p>
+        )}
       </div>
     </div>
   );

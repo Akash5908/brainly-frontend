@@ -4,7 +4,7 @@ import Tag from "./tag";
 
 const Card = () => {
   return (
-    <div className="flex flex-col gap-3 p-3 w-64 h-80 bg-slate-500 rounded-lg overflow-hidden ">
+    <div className="flex flex-col gap-3 p-3 w-64 h-fit bg-slate-500 rounded-lg overflow-hidden ">
       {/* card header */}
       <div className="flex justify-between">
         <div className="flex gap-1">
@@ -40,6 +40,11 @@ const Card = () => {
         <Tag text="learning" />
         <Tag text="learning" />
         <Tag text="learning" />
+      </div>
+
+      {/* Date when the card add */}
+      <div>
+        <p className="text-xs font-light text-gray-600">Added on 04/01/2025</p>
       </div>
     </div>
   );
