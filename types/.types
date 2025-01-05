@@ -1,0 +1,7 @@
+import { Session } from "next-auth";
+
+interface CustomSession extends Session {
+  accessToken?: string;
+}
+
+export type { CustomSession };
