@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 interface ButtonProps {
@@ -11,6 +9,7 @@ interface ButtonProps {
   rounded: string;
   Icon?: any;
   gap?: string;
+  fun?: () => void;
 }
 
 const Button = (props: ButtonProps) => {
@@ -24,7 +23,9 @@ const Button = (props: ButtonProps) => {
   return (
     <div>
       <button
+        data-modal-target="default-modal"
         className={`flex ${pxClass} ${gapClass} ${hClass} ${textClass} ${bgClass} ${rClass}      items-center                   `}
+        onClick={() => props.fun && props.fun()}
       >
         <span>{props?.Icon}</span>
         <span>{props.text}</span>

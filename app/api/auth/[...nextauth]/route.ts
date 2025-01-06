@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import type { NextAuthOptions } from "next-auth";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "username",
@@ -31,11 +32,14 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.token;
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
+
+      session.id = token.id || "677184bb62b4343adaee8d8c";
       session.user = {
         name: token.name,
         email: token.email || null,
@@ -44,6 +48,8 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

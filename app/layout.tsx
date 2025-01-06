@@ -33,10 +33,12 @@ export default function RootLayout({
         <div className="flex ">
           <SideBar />
 
-          <div className="flex-col w-4/5 mx-5">
-            <Navbar />
-            <Providers>{children}</Providers>
-          </div>
+          <Providers>
+            <div className="flex-col w-4/5 h-screen mx-5 ">
+              <Navbar />
+              {children}
+            </div>
+          </Providers>
         </div>
       </body>
     </html>

@@ -1,65 +1,47 @@
-"use client";
-
-import { useSession, signIn, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
 import Card from "./component/ui/card";
+import axios from "axios";
 
-export default function Home() {
-  const { data: session } = useSession(); // Fetch session dynamically
-  const [contentData, setContentData] = useState(null);
+import { getServerSession, Session } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-  useEffect(() => {
-    if (session?.accessToken) {
-      // Fetch content data using the token
-      fetchContent(session.accessToken);
-    }
-  }, [session]);
-
-  async function fetchContent(token: string) {
-    try {
-      console.log("before fetch");
-      const response = await fetch(
-        "http://localhost:3001/content?id=677184bb62b4343adaee8d8c",
-        {
-          method: "get",
-          headers: {
-            "Content-Type": "application/json", // Inform server of JSON payload
-            Authorization: `Bearer ${token}`, // Pass the token in headers if required
-          },
-          // body: JSON.stringify({
-          //   userId: "677184bb62b4343adaee8d8c", // Replace with dynamic user ID
-          // }),
-        }
-      );
-      console.log("after fetch");
-      const data = await response.json();
-      setContentData(data);
-    } catch (error) {
-      console.error("Error fetching content:", error);
-    }
+async function fetchContent(session: Session) {
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/content?id=${session.id}`,
+      {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.accessToken}`, // Pass the token in headers if required
+        },
+      }
+    );
+    return response.data.content;
+  } catch (error) {
+    console.error("Error fetching content:", error);
   }
+}
 
-  return (
-    <div>
-      <h1>Hello World</h1>
-
-      {!session ? (
-        <button onClick={() => signIn()}>Sign In</button>
-      ) : (
-        <>
-          <button onClick={() => signOut()}>Sign Out</button>
-          <p>Session: {JSON.stringify(session)}</p>
-        </>
-      )}
-
-      {contentData && (
-        <div>
-          <h2>Content Data:</h2>
-          <pre>{JSON.stringify(contentData, null, 2)}</pre>
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  if (session) {
+    const content = await fetchContent(session);
+    return (
+      <div className="h-5/6 overflow-y-scroll no-scrollbar ">
+        <div className="flex gap-3 flex-wrap justify-around bg-green-400  on-scrollbar">
+          {content.map((item: any, index: any) => (
+            <Card
+              title={item.title}
+              key={index}
+              describtion={item.describtion}
+              tags={item.tags}
+              link={item.link}
+            />
+          ))}
         </div>
-      )}
-
-      <Card />
-    </div>
-  );
+      </div>
+    );
+  } else {
+    return <h1>Please Signin</h1>;
+  }
 }

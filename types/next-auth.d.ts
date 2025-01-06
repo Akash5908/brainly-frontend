@@ -9,14 +9,17 @@ declare module "next-auth" {
       image?: string | null;
       token?: string | null;
     };
+    id: string | null;
     expires: ISODateString;
   }
 
   interface JWT {
     accessToken?: string;
+    id?: string;
   }
 
   interface DefaultUser {
     token?: string;
+    id?: string;
   }
 }
