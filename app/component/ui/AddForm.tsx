@@ -18,7 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 
 const tagsSchema = z.object({ name: z.string() });
-
 const formSchema = z.object({
   link: z.string().url(),
   type: z.string(),
@@ -28,47 +27,81 @@ const formSchema = z.object({
   tags: z.array(tagsSchema),
 });
 
-const AddForm = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      link: "",
-    },
-  });
-
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
-
+const AppForm = () => {
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex justify-center h-full bg-slate-800"
-      >
-        <FormField
-          control={form.control}
-          name="link"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
+    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md w-full z-20">
+      <form action="" className="space-y-4">
+        <div>
+          <label
+            htmlFor="link"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Link
+          </label>
+          <input
+            type="text"
+            id="link"
+            name="link"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="describtion"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Description
+          </label>
+          <input
+            type="text"
+            id="describtion"
+            name="describtion"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="tag"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Tags
+          </label>
+          <input
+            type="text"
+            id="tag"
+            name="tag"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+
+        <div className="pt-4">
+          <button
+            type="submit"
+            className="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Submit
+          </button>
+        </div>
       </form>
-    </Form>
+    </div>
   );
 };
 
-export default AddForm;
+export default AppForm;

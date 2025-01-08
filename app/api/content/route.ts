@@ -23,6 +23,7 @@ export const getContent = async () => {
         }
       );
       const contentData = response.data.content;
+      console.log(contentData);
 
       return contentData;
     } catch (error) {
@@ -37,6 +38,7 @@ export const getContent = async () => {
 export const deleteCard = async (id: string) => {
   const session = await getServerSession(authOptions);
   const token = session?.accessToken;
+
   try {
     await axios.delete(`${url}/content`, {
       headers: {

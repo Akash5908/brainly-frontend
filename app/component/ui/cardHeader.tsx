@@ -5,6 +5,7 @@ import DeleteIcon from "../icons/delete";
 
 import { deleteCard } from "@/app/api/content/route";
 import { useSession } from "next-auth/react";
+import { useContents } from "@/app/contexts/contentContext";
 
 interface CardHeader {
   title: string;
@@ -12,7 +13,8 @@ interface CardHeader {
 }
 
 const CardHeader = (props: CardHeader) => {
-  const { data: session } = useSession();
+  const { deleteCard } = useContents();
+
   return (
     <div className="flex justify-between">
       <div className="flex gap-1">
@@ -23,7 +25,10 @@ const CardHeader = (props: CardHeader) => {
         <ShareIcon size="4" />
         <DeleteIcon
           size="4"
-          fun={() => deleteCard(props.id, session?.accessToken)}
+          fun={() => {
+            console.log("Delete content");
+            deleteCard(props.id);
+          }}
         />
       </div>
     </div>

@@ -3,12 +3,17 @@
 import { useContext } from "react";
 import { useContents } from "./contexts/contentContext";
 import Card from "./component/ui/card";
+import { error } from "console";
 
 export default function Home() {
   // const [content, setContent] = useRecoilState(contentState);
-  const { content, loading, getContent } = useContents();
+  const { content, loading, error } = useContents();
 
-  console.log("COntetr Data", content);
+  if (loading) {
+    <h1>Loading</h1>;
+  } else if (error) {
+    <h1>{error}</h1>;
+  }
 
   if (content) {
     return (

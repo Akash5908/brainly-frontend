@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 interface ContentContextInterface {
   content: cardInterface[];
   loading: boolean;
+  error: string | null;
   getContent: () => void;
   addContent?: (newTodo: Omit<cardInterface, "id">) => void;
   updateContent?: (content: cardInterface) => void;
@@ -26,30 +27,25 @@ export const ContentProvider = ({
   const [contents, setContents] = useState<cardInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: Session, status } = useSession();
+  const { data: session } = useSession();
+  const token = session?.accessToken;
 
   const fetchContent = async () => {
     setLoading(true);
     setError(null);
     try {
-      // const data = await getContent();
-      console.log(session);
-      console.log(session);
-      console.log(session);
-      console.log(session);
-      const response = await axios.get(
-        `http://localhost:3001/content?id=${session?.id}`,
-        {
-          method: "get",
+      await axios
+        .get(`http://localhost:3001/content?id=${session?.id}`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      const data = response.data.content;
-      console.log("DATA", data);
-      setContents(data);
+        })
+        .then((res) => {
+          const data = res.data.content;
+
+          setContents(data);
+        });
     } catch (error) {
       setError("Error in fetching the Card");
     } finally {
@@ -61,7 +57,13 @@ export const ContentProvider = ({
     setLoading(true);
     setError(null);
     try {
-      await deleteCard(id);
+      console.log("inside the try delete");
+      await axios.delete(`http://localhost:3001/content?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       setContents((prev) => prev.filter((card) => card.id !== id));
     } catch (error) {
       setError("Error in Deleting the Card");
@@ -72,13 +74,14 @@ export const ContentProvider = ({
 
   useEffect(() => {
     fetchContent();
-  }, []);
+  }, [session, contents]);
 
   return (
     <ContentsContext.Provider
       value={{
         content: contents,
         loading,
+        error,
         getContent: fetchContent,
         // addContent,
         // updateContent
