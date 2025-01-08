@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         const userData = await res.json();
-
+        console.log("userData", userData);
         if (res.ok && userData) {
           return userData;
         }
@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
         name: token.name,
         email: token.email || null,
       };
-
+      console.log("session in next auth", session);
       return session;
     },
   },

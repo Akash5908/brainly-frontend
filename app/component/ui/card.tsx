@@ -1,28 +1,31 @@
 import React from "react";
 import ShareIcon from "../icons/share";
 import Tag from "./tag";
+import DeleteIcon from "../icons/delete";
+import CardHeader from "./cardHeader";
+import { cardInterface } from "@/lib/types";
 
-interface cardInterface {
-  title: string;
-  describtion: string;
-  tags: string[];
-  link: string;
+// import { deleteCard } from "@/app/api/content/route";
+const url = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+export async function getServerSideProps() {
+  const deleteCard = async () => {
+    console.log("Content Delete", url);
+    // await axios.delete(`${url}/delete/33`);
+  };
+
+  return {
+    props: {
+      delete: deleteCard(), // This will be available as props on the client
+    },
+  };
 }
 
 const Card = (props: cardInterface) => {
   return (
     <div className="flex flex-col gap-3 p-3 w-64 h-fit bg-slate-500 rounded-lg overflow-hidden ">
       {/* card header */}
-      <div className="flex justify-between">
-        <div className="flex gap-1">
-          <ShareIcon size="6" />
-          <p> {props.title}</p>
-        </div>
-        <div className="flex gap-2">
-          <ShareIcon size="4" />
-          <ShareIcon size="4" />
-        </div>
-      </div>
+      <CardHeader title={props.title} id={props.id} />
       {/* Card Content */}
       <div>
         <p>{props.describtion}</p>

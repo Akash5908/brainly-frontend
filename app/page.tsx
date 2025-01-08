@@ -1,31 +1,16 @@
+"use client";
+
+import { useContext } from "react";
+import { useContents } from "./contexts/contentContext";
 import Card from "./component/ui/card";
-import axios from "axios";
 
-import { getServerSession, Session } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+export default function Home() {
+  // const [content, setContent] = useRecoilState(contentState);
+  const { content, loading, getContent } = useContents();
 
-async function fetchContent(session: Session) {
-  try {
-    const response = await axios.get(
-      `http://localhost:3001/content?id=${session.id}`,
-      {
-        method: "get",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.accessToken}`, // Pass the token in headers if required
-        },
-      }
-    );
-    return response.data.content;
-  } catch (error) {
-    console.error("Error fetching content:", error);
-  }
-}
+  console.log("COntetr Data", content);
 
-export default async function Home() {
-  const session = await getServerSession(authOptions);
-  if (session) {
-    const content = await fetchContent(session);
+  if (content) {
     return (
       <div className="h-5/6 overflow-y-scroll no-scrollbar ">
         <div className="flex gap-3 flex-wrap justify-around bg-green-400  on-scrollbar">
@@ -36,6 +21,7 @@ export default async function Home() {
               describtion={item.describtion}
               tags={item.tags}
               link={item.link}
+              id={item._id}
             />
           ))}
         </div>
