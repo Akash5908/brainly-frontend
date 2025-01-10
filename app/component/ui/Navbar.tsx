@@ -6,12 +6,13 @@ import PlusIcon from "../icons/plus";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import AddForm from "./AddForm";
+import { useFormModal } from "@/app/contexts/formModalContext";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const { data, status } = useSession();
-  const [modal, setModal] = useState(false);
+  const { modalState, formShow } = useFormModal();
 
   return (
     <>
@@ -39,7 +40,7 @@ const Navbar = (props: Props) => {
             rounded={"lg"}
             Icon={<PlusIcon />}
             gap="2"
-            fun={() => setModal((prev) => !prev)}
+            fun={() => formShow()}
           />
           {/* Avatar */}
           {status === "unauthenticated" ? (
@@ -71,9 +72,9 @@ const Navbar = (props: Props) => {
           )}
         </div>
       </div>
-      {modal && (
+      {modalState && (
         <div className="flex absolute left-1/3  w-1/2 h-1/2 justify-center items-center z-100  bg-slate-400 ">
-          <AddForm />
+          <AddForm formType="add" />
         </div>
       )}
     </>

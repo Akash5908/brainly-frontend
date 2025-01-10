@@ -4,22 +4,7 @@ import Tag from "./tag";
 import DeleteIcon from "../icons/delete";
 import CardHeader from "./cardHeader";
 import { cardInterface } from "@/lib/types";
-
-// import { deleteCard } from "@/app/api/content/route";
-const url = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-export async function getServerSideProps() {
-  const deleteCard = async () => {
-    console.log("Content Delete", url);
-    // await axios.delete(`${url}/delete/33`);
-  };
-
-  return {
-    props: {
-      delete: deleteCard(), // This will be available as props on the client
-    },
-  };
-}
+import { useFormModal } from "@/app/contexts/formModalContext";
 
 const Card = (props: cardInterface) => {
   return (
@@ -31,9 +16,8 @@ const Card = (props: cardInterface) => {
         <p>{props.describtion}</p>
       </div>
       <div className="flex  gap-2 overflow-x-auto no-scrollbar ">
-        {props.tags.map((tag, index) => (
-          <Tag text={tag} key={index} />
-        ))}
+        {props.tags.length > 0 &&
+          props.tags.map((tag, index) => <Tag text={tag} key={index} />)}
       </div>
 
       {/* Date when the card add */}

@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { cardInterface } from "@/lib/types";
-import { deleteCard, getContent } from "../api/content/route";
+
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
@@ -10,7 +10,7 @@ interface ContentContextInterface {
   loading: boolean;
   error: string | null;
   getContent: () => void;
-  addContent?: (newTodo: Omit<cardInterface, "id">) => void;
+  addContent?: (newCard: cardInterface) => void;
   updateContent?: (content: cardInterface) => void;
   deleteCard: (id: string) => void;
 }
@@ -53,6 +53,41 @@ export const ContentProvider = ({
     }
   };
 
+  const addContent = async (Carddata: cardInterface) => {
+    console.log("Into the addContent");
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("Before going the axios");
+      axios
+        .post(
+          `http://localhost:3001/content`,
+          {
+            Carddata,
+            userId: session?.id,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          setLoading(false);
+          setContents((prev) => [...prev, Carddata]);
+          setError(null);
+        })
+        .catch((err) => setError("Error in Adding the Content"));
+      console.log("Add content successfull");
+      // setContents((prev) => [...prev, Carddata]);
+    } catch (error) {
+      console.log("Not successfull");
+      setError("Error in Adding the Content");
+      throw Error;
+    }
+  };
+
   const deleteContent = async (id: string) => {
     setLoading(true);
     setError(null);
@@ -74,7 +109,7 @@ export const ContentProvider = ({
 
   useEffect(() => {
     fetchContent();
-  }, [session, contents]);
+  }, [session]);
 
   return (
     <ContentsContext.Provider
@@ -83,7 +118,7 @@ export const ContentProvider = ({
         loading,
         error,
         getContent: fetchContent,
-        // addContent,
+        addContent,
         // updateContent
         deleteCard: deleteContent,
       }}

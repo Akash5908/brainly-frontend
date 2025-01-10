@@ -2,6 +2,7 @@
 import { SessionProvider } from "next-auth/react";
 import React from "react";
 import { ContentProvider } from "./contexts/contentContext";
+import { FormModalProvider } from "./contexts/formModalContext";
 
 export const Providers = async ({
   children,
@@ -10,7 +11,9 @@ export const Providers = async ({
 }) => {
   return (
     <SessionProvider>
-      <ContentProvider>{children}</ContentProvider>
+      <ContentProvider>
+        <FormModalProvider>{children}</FormModalProvider>
+      </ContentProvider>
     </SessionProvider>
   );
 };

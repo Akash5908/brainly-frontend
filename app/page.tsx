@@ -8,7 +8,6 @@ import { error } from "console";
 export default function Home() {
   // const [content, setContent] = useRecoilState(contentState);
   const { content, loading, error } = useContents();
-
   if (loading) {
     <h1>Loading</h1>;
   } else if (error) {
@@ -21,6 +20,7 @@ export default function Home() {
         <div className="flex gap-3 flex-wrap justify-around bg-green-400  on-scrollbar">
           {content.map((item: any, index: any) => (
             <Card
+              type={item.type}
               title={item.title}
               key={index}
               describtion={item.describtion}
@@ -29,6 +29,7 @@ export default function Home() {
               id={item._id}
             />
           ))}
+          {}
         </div>
       </div>
     );
