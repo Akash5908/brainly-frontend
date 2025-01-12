@@ -9,7 +9,7 @@ export type { CustomSession };
 export interface IconProps {
   size: string;
   fun?: any;
-  cardId?: string;
+  cardData?: cardInterface;
 }
 
 export interface cardInterface {

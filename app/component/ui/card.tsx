@@ -1,16 +1,15 @@
 import React from "react";
-import ShareIcon from "../icons/share";
+
 import Tag from "./tag";
-import DeleteIcon from "../icons/delete";
+
 import CardHeader from "./cardHeader";
 import { cardInterface } from "@/lib/types";
-import { useFormModal } from "@/app/contexts/formModalContext";
 
 const Card = (props: cardInterface) => {
   return (
     <div className="flex flex-col gap-3 p-3 w-64 h-fit bg-slate-500 rounded-lg overflow-hidden ">
       {/* card header */}
-      <CardHeader title={props.title} id={props.id} />
+      <CardHeader cardData={props} />
       {/* Card Content */}
       <div>
         <p>{props.describtion}</p>

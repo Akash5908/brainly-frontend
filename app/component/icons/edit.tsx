@@ -5,7 +5,12 @@ const EditIcon = (props: IconProps) => {
   const size = `h-${props.size}`;
 
   return (
-    <button onClick={() => props.fun(props.cardId)} className="flex flex-start">
+    <button
+      onClick={() => {
+        props.fun(props.cardData?.id);
+      }}
+      className="flex flex-start"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

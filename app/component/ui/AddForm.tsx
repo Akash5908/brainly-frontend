@@ -37,16 +37,17 @@ const formSchema = z.object({
 
 const AppForm = ({
   formType,
-  cardId,
+  cardData,
 }: {
   formType: string;
-  cardId?: string;
+  cardData?: cardInterface;
 }) => {
   const form = useForm<cardInterface>({
     defaultValues: {
-      link: "https://example.com",
-      title: "",
-      describtion: "",
+      type: cardData ? cardData.type : "",
+      link: cardData ? cardData.link : "",
+      title: cardData ? cardData.title : "",
+      describtion: cardData ? cardData.describtion : "",
       tags: [],
     },
     resolver: zodResolver(formSchema),
@@ -55,14 +56,21 @@ const AppForm = ({
   const { errors } = formState;
   const { formShow, editModalFun } = useFormModal();
 
-  const { addContent, error } = useContents();
-
+  const { addContent, error, updateContent } = useContents();
+  console.log("Card Data", cardData);
   const submitForm = (data: cardInterface) => {
-    if (addContent) {
+    console.log("🚀 ~ submitForm ~ formType:", formType);
+    if (addContent && formType == "add") {
       (async () => {
         addContent(data);
         console.log("error valeu", error);
       })();
+      if (!error) {
+        formShow();
+      }
+    } else if (updateContent && formType == "edit") {
+      console.log("Inside the edit");
+      updateContent({ id: cardData?.id!, CardData: data });
       if (!error) {
         formShow();
       }
@@ -72,9 +80,12 @@ const AppForm = ({
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md w-full z-20">
       {
         <button
-          onClick={() =>
-            formType == "add" ? formShow() : cardId && editModalFun(cardId)
-          }
+          onClick={() => {
+            console.log("Card Id", cardData?.id);
+            formType == "add"
+              ? formShow()
+              : cardData?.id && editModalFun(cardData.id);
+          }}
         >
           <Xicon />
         </button>

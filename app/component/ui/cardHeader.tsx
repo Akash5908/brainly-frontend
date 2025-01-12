@@ -7,13 +7,9 @@ import { useContents } from "@/app/contexts/contentContext";
 import EditIcon from "../icons/edit";
 import { useFormModal } from "@/app/contexts/formModalContext";
 import AddForm from "./AddForm";
+import { cardInterface } from "@/lib/types";
 
-interface CardHeader {
-  title: string;
-  id?: string | null;
-}
-
-const CardHeader = (props: CardHeader) => {
+const CardHeader = ({ cardData }: { cardData: cardInterface }) => {
   const { deleteCard } = useContents();
   const { editModalState, editModalFun } = useFormModal();
   const { formState, cardId } = editModalState;
@@ -21,28 +17,24 @@ const CardHeader = (props: CardHeader) => {
     <div className="flex justify-between">
       <div className="flex gap-1">
         <ShareIcon size="6" />
-        <p> {props.title}</p>
+        <p> {cardData.title}</p>
       </div>
       <div className="flex gap-2">
         <ShareIcon size="4" />
-        <EditIcon
-          size="4"
-          fun={editModalFun}
-          cardId={props.id ? props.id : ""}
-        />
+        <EditIcon size="4" fun={editModalFun} cardData={cardData} />
         <DeleteIcon
           size="4"
           fun={() => {
             console.log("Delete content");
             {
-              props.id && deleteCard(props.id);
+              cardData.id && deleteCard(cardData.id);
             }
           }}
         />
       </div>
-      {formState && props.id == cardId && (
-        <div className="flex absolute left-1/3  w-1/2 h-1/2 justify-center items-center z-100  bg-slate-400 ">
-          <AddForm formType={"edit"} />
+      {formState && cardData.id == cardId && (
+        <div className="flex absolute left-1/3 top-1/3  w-1/2 h-1/2 justify-center items-center z-100  bg-slate-400 ">
+          <AddForm formType={"edit"} cardData={cardData} />
         </div>
       )}
     </div>

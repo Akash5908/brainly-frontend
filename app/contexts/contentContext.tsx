@@ -11,7 +11,13 @@ interface ContentContextInterface {
   error: string | null;
   getContent: () => void;
   addContent?: (newCard: cardInterface) => void;
-  updateContent?: (content: cardInterface) => void;
+  updateContent?: ({
+    id,
+    CardData,
+  }: {
+    id: string;
+    CardData: cardInterface;
+  }) => Promise<void>;
   deleteCard: (id: string) => void;
 }
 
@@ -88,6 +94,33 @@ export const ContentProvider = ({
     }
   };
 
+  const updateContent = async ({
+    id,
+    CardData,
+  }: {
+    id: string;
+    CardData: cardInterface;
+  }) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await axios.put(
+        `http://localhost:3001/content?id=${id}`,
+        {
+          CardData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      setError("Error in Updating the Card");
+    }
+  };
+
   const deleteContent = async (id: string) => {
     setLoading(true);
     setError(null);
@@ -119,7 +152,7 @@ export const ContentProvider = ({
         error,
         getContent: fetchContent,
         addContent,
-        // updateContent
+        updateContent,
         deleteCard: deleteContent,
       }}
     >
