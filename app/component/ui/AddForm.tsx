@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -48,7 +48,7 @@ const AppForm = ({
       link: cardData ? cardData.link : "",
       title: cardData ? cardData.title : "",
       describtion: cardData ? cardData.describtion : "",
-      tags: [],
+      tags: cardData ? cardData.tags : [],
     },
     resolver: zodResolver(formSchema),
   });
@@ -57,9 +57,8 @@ const AppForm = ({
   const { formShow, editModalFun } = useFormModal();
 
   const { addContent, error, updateContent } = useContents();
-  console.log("Card Data", cardData);
+
   const submitForm = (data: cardInterface) => {
-    console.log("🚀 ~ submitForm ~ formType:", formType);
     if (addContent && formType == "add") {
       (async () => {
         addContent(data);
@@ -69,11 +68,10 @@ const AppForm = ({
         formShow();
       }
     } else if (updateContent && formType == "edit") {
-      console.log("Inside the edit");
       updateContent({ id: cardData?.id!, CardData: data });
-      if (!error) {
-        formShow();
-      }
+
+      const id = cardData?.id;
+      editModalFun(id!);
     }
   };
   return (
@@ -123,7 +121,6 @@ const AppForm = ({
           />
           {errors.link && <p>Link is required</p>}
         </div>
-
         <div>
           <label
             htmlFor="title"
@@ -140,7 +137,6 @@ const AppForm = ({
           />
           {errors.title && <p>Title is required</p>}
         </div>
-
         <div>
           <label
             htmlFor="describtion"
@@ -157,30 +153,38 @@ const AppForm = ({
           />
           {errors.describtion && <p>{errors.describtion.message}</p>}
         </div>
-
         <div>
           <label
-            htmlFor="tag"
+            htmlFor="tags"
             className="block text-sm font-medium text-gray-700"
           >
             Tags
           </label>
-          <input
-            type="text"
-            id="tags"
+          <Controller
             name="tags"
-            placeholder="Enter tags separated by commas"
-            onChange={(e) => {
-              const value = e.target.value;
-              const tagsArray = value
-                .split(",") // Split by comma
-                .map((tag) => tag.trim()) // Trim whitespace
-                .filter((tag) => tag); // Remove empty strings
-              setValue("tags", tagsArray); // Update the form value as an array
-            }}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            control={form.control}
+            render={({ field }) => (
+              <input
+                type="text"
+                id="tags"
+                name="tags"
+                placeholder="Enter tags separated by commas"
+                value={field.value?.join(", ") || ""} // Display tags as a comma-separated string
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const tagsArray = value
+                    .split(",") // Split by commas
+                    .map((tag) => tag.trim()) // Remove extra whitespace
+                    .filter((tag) => tag); // Remove empty strings
+                  field.onChange(tagsArray); // Update the form state with the array
+                }}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            )}
           />
-          {errors.tags && <p>{errors.tags.message}</p>}
+          {errors.tags && (
+            <p className="text-red-500 text-sm">{errors.tags.message}</p>
+          )}
         </div>
 
         <div className="pt-4">

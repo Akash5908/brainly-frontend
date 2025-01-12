@@ -60,11 +60,9 @@ export const ContentProvider = ({
   };
 
   const addContent = async (Carddata: cardInterface) => {
-    console.log("Into the addContent");
     setLoading(true);
     setError(null);
     try {
-      console.log("Before going the axios");
       axios
         .post(
           `http://localhost:3001/content`,
@@ -104,7 +102,7 @@ export const ContentProvider = ({
     setLoading(true);
     setError(null);
     try {
-      await axios.put(
+      const updateContent = await axios.put(
         `http://localhost:3001/content?id=${id}`,
         {
           CardData,
@@ -116,6 +114,16 @@ export const ContentProvider = ({
           },
         }
       );
+      setLoading(false);
+
+      const newContent = contents.map((card) => {
+        if (card._id == id) {
+          card = updateContent.data;
+        }
+        return card;
+      });
+      setContents(newContent);
+      return;
     } catch (error) {
       setError("Error in Updating the Card");
     }
@@ -131,8 +139,10 @@ export const ContentProvider = ({
           Authorization: `Bearer ${token}`,
         },
       });
+      setLoading(false);
+      const newContent = contents.filter((card) => card._id !== id);
 
-      setContents((prev) => prev.filter((card) => card.id !== id));
+      setContents(newContent);
     } catch (error) {
       setError("Error in Deleting the Card");
     } finally {

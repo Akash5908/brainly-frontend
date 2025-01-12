@@ -13,6 +13,7 @@ const CardHeader = ({ cardData }: { cardData: cardInterface }) => {
   const { deleteCard } = useContents();
   const { editModalState, editModalFun } = useFormModal();
   const { formState, cardId } = editModalState;
+
   return (
     <div className="flex justify-between">
       <div className="flex gap-1">

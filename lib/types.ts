@@ -19,6 +19,7 @@ export interface cardInterface {
   tags: string[] | [];
   link: string;
   id?: string | null;
+  _id?: string;
 }
 
 export interface fromModal {
