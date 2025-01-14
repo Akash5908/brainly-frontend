@@ -10,7 +10,7 @@ import AddForm from "./AddForm";
 import { cardInterface } from "@/lib/types";
 
 const CardHeader = ({ cardData }: { cardData: cardInterface }) => {
-  const { deleteCard } = useContents();
+  const { deleteCard, shareCard } = useContents();
   const { editModalState, editModalFun } = useFormModal();
   const { formState, cardId } = editModalState;
 
@@ -21,7 +21,7 @@ const CardHeader = ({ cardData }: { cardData: cardInterface }) => {
         <p> {cardData.title}</p>
       </div>
       <div className="flex gap-2">
-        <ShareIcon size="4" />
+        <ShareIcon size="4" fun={shareCard} cardData={cardData} />
         <EditIcon size="4" fun={editModalFun} cardData={cardData} />
         <DeleteIcon
           size="4"

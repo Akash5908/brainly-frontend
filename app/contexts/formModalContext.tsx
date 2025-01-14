@@ -1,3 +1,4 @@
+"use client";
 import { fromModal } from "@/lib/types";
 import { createContext, ReactNode, useContext, useState } from "react";
 

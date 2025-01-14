@@ -1,13 +1,34 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 
-interface shareIconProps {
-  size: string;
-}
-
-const ShareIcon = (props: shareIconProps) => {
+const ShareIcon = (props: IconProps) => {
+  const [shareLink, setShareLink] = useState("");
   const sClass = `h-${props.size}`;
+
+  const handleCopShareLink = (link: string) => {
+    if (link) {
+      navigator.clipboard.writeText(link);
+      alert("Link copied to clipboard!");
+    } else {
+      alert("Something went wrong");
+    }
+  };
+
+  const handleShareClick = async () => {
+    if (props.fun) {
+      try {
+        const link = await props.fun(props.cardData?.id);
+
+        // Pass the resolved link to the copy function
+        handleCopShareLink(link);
+      } catch (error) {
+        console.error("Error fetching share link:", error);
+        alert("Failed to generate share link.");
+      }
+    }
+  };
   return (
-    <div>
+    <div onClick={handleShareClick} className="flex flex-start">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

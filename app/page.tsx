@@ -1,13 +1,11 @@
 "use client";
 
-import { useContext } from "react";
 import { useContents } from "./contexts/contentContext";
 import Card from "./component/ui/card";
-import { error } from "console";
 
 export default function Home() {
-  // const [content, setContent] = useRecoilState(contentState);
   const { content, loading, error } = useContents();
+
   if (loading) {
     <h1>Loading</h1>;
   } else if (error) {
@@ -29,7 +27,6 @@ export default function Home() {
               id={item._id}
             />
           ))}
-          {}
         </div>
       </div>
     );

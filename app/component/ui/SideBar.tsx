@@ -1,7 +1,7 @@
 import React from "react";
 import BookmarkIcon from "../icons/bookmark";
 import Xicon from "../icons/xicon";
-import Image from "next/image";
+
 const SideBar = () => {
   return (
     <div className=" border-solid border-r  border-gray-500 w-1/5 h-screen">

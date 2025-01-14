@@ -17,8 +17,9 @@ interface ContentContextInterface {
   }: {
     id: string;
     CardData: cardInterface;
-  }) => Promise<void>;
+  }) => void;
   deleteCard: (id: string) => void;
+  shareCard: (id: string) => Promise<string>;
 }
 
 const ContentsContext = createContext<ContentContextInterface | undefined>(
@@ -150,6 +151,30 @@ export const ContentProvider = ({
     }
   };
 
+  const shareContent = async (id: string) => {
+    console.log("Inside the shareContent", id);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/content/share?id=${id}`,
+        {
+          headers: {
+            "Content-Type": "application-json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setLoading(false);
+      const shareUrl = await response.data.url;
+      console.log("🚀 ~ shareContent ~ shareUrl:", shareUrl);
+      return shareUrl;
+    } catch (error) {
+      setError("Error in making the sharable link");
+    }
+  };
+
   useEffect(() => {
     fetchContent();
   }, [session]);
@@ -164,6 +189,7 @@ export const ContentProvider = ({
         addContent,
         updateContent,
         deleteCard: deleteContent,
+        shareCard: shareContent,
       }}
     >
       {children}
