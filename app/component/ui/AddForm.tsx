@@ -11,9 +11,10 @@ import Xicon from "../icons/xicon";
 import { cardInterface } from "@/lib/types";
 
 import { useContents } from "@/app/contexts/contentContext";
+import axios from "axios";
 
 const tagsSchema = z.object({ name: z.string() });
-
+const tagArray: string[] = [];
 const formSchema = z.object({
   type: z.string().min(2, { message: "Give a valid type" }),
   link: z.string().url(),
@@ -60,7 +61,7 @@ const AppForm = ({
 
   const submitForm = (data: cardInterface) => {
     if (addContent && formType == "add") {
-      (async () => {
+      (() => {
         addContent(data);
         console.log("error valeu", error);
       })();
@@ -74,6 +75,18 @@ const AppForm = ({
       editModalFun(id!);
     }
   };
+
+  // Defined a func to store tags
+  function handleTagSubmit() {
+    axios
+      .post(``, {
+        tagArray,
+      })
+      .then((res) => {
+        console.log("Successfully added the tags");
+      });
+  }
+  // console.log(tagArray);
   return (
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md w-full z-20">
       {
@@ -178,6 +191,14 @@ const AppForm = ({
                     .filter((tag) => tag); // Remove empty strings
                   field.onChange(tagsArray); // Update the form state with the array
                 }}
+                onKeyDown={(e) => {
+                  const target = e.target as HTMLInputElement; // Explicitly cast e.target
+                  e.key === "Enter"
+                    ? (tagArray.push(target.value),
+                      setTimeout(() => (target.value = ""), 500),
+                      handleTagSubmit())
+                    : "";
+                }}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             )}
@@ -186,6 +207,22 @@ const AppForm = ({
             <p className="text-red-500 text-sm">{errors.tags.message}</p>
           )}
         </div>
+        {tagArray.length > 0 ? (
+          <div className="flex space-x-2">
+            {tagArray.map((item) => (
+              <div>
+                <div
+                  key={item}
+                  className=" border-[1px] p-2 rounded-md shadow-sm"
+                >
+                  {item}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          ""
+        )}
 
         <div className="pt-4">
           <button

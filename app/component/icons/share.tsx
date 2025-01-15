@@ -14,13 +14,14 @@ const ShareIcon = (props: IconProps) => {
       alert("Something went wrong");
     }
   };
-  const handleShareClick = async () => {
+  const handleShareClick = () => {
     if (props.fun) {
       try {
-        const link = await props.fun(props.cardData?.id);
+        const link = props.fun(props.cardData?.id).then(() => {
+          handleCopShareLink(link);
+        });
 
         // Pass the resolved link to the copy function
-        handleCopShareLink(link);
       } catch (error) {
         console.error("Error fetching share link:", error);
         alert("Failed to generate share link.");
