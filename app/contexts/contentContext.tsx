@@ -19,7 +19,7 @@ interface ContentContextInterface {
     CardData: cardInterface;
   }) => void;
   deleteCard: (id: string) => void;
-  shareCard: (id: string) => Promise<string>;
+  shareCard: (id: string) => void;
 }
 
 const ContentsContext = createContext<ContentContextInterface | undefined>(
@@ -37,11 +37,11 @@ export const ContentProvider = ({
   const { data: session } = useSession();
   const token = session?.accessToken;
 
-  const fetchContent = async () => {
+  const fetchContent = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios
+      axios
         .get(`http://localhost:3001/content?id=${session?.id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export const ContentProvider = ({
     }
   };
 
-  const addContent = async (Carddata: cardInterface) => {
+  const addContent = (Carddata: cardInterface) => {
     setLoading(true);
     setError(null);
     try {
@@ -93,7 +93,7 @@ export const ContentProvider = ({
     }
   };
 
-  const updateContent = async ({
+  const updateContent = ({
     id,
     CardData,
   }: {
@@ -103,47 +103,53 @@ export const ContentProvider = ({
     setLoading(true);
     setError(null);
     try {
-      const updateContent = await axios.put(
-        `http://localhost:3001/content?id=${id}`,
-        {
-          CardData,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+      const updateContent = axios
+        .put(
+          `http://localhost:3001/content?id=${id}`,
+          {
+            CardData,
           },
-        }
-      );
-      setLoading(false);
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          setLoading(false);
 
-      const newContent = contents.map((card) => {
-        if (card._id == id) {
-          card = updateContent.data;
-        }
-        return card;
-      });
-      setContents(newContent);
-      return;
+          const newContent = contents.map((card) => {
+            if (card._id == id) {
+              card = res.data;
+            }
+            return card;
+          });
+          setContents(newContent);
+          return;
+        });
     } catch (error) {
       setError("Error in Updating the Card");
     }
   };
 
-  const deleteContent = async (id: string) => {
+  const deleteContent = (id: string) => {
     setLoading(true);
     setError(null);
     try {
       console.log("inside the try delete");
-      await axios.delete(`http://localhost:3001/content?id=${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setLoading(false);
-      const newContent = contents.filter((card) => card._id !== id);
+      axios
+        .delete(`http://localhost:3001/content?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setLoading(false);
+          const newContent = contents.filter((card) => card._id !== id);
 
-      setContents(newContent);
+          setContents(newContent);
+        });
     } catch (error) {
       setError("Error in Deleting the Card");
     } finally {
@@ -151,25 +157,25 @@ export const ContentProvider = ({
     }
   };
 
-  const shareContent = async (id: string) => {
+  const shareContent = (id: string) => {
     console.log("Inside the shareContent", id);
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get(
-        `http://localhost:3001/content/share?id=${id}`,
-        {
+      const response = axios
+        .get(`http://localhost:3001/content/share?id=${id}`, {
           headers: {
             "Content-Type": "application-json",
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      setLoading(false);
-      const shareUrl = await response.data.url;
-      console.log("🚀 ~ shareContent ~ shareUrl:", shareUrl);
-      return shareUrl;
+        })
+        .then((res) => {
+          setLoading(false);
+          const shareUrl = res.data.url;
+          console.log("🚀 ~ shareContent ~ shareUrl:", shareUrl);
+          return shareUrl;
+        });
     } catch (error) {
       setError("Error in making the sharable link");
     }
