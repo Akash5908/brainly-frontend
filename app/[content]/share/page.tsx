@@ -5,14 +5,16 @@ import jwt from "jsonwebtoken";
 const ShareContent = () => {
   const pathName = useSearchParams();
   const token = pathName.get("token");
-  const id = jwt.verify(token!, "Secret");
-  console.log("🚀 ~ ShareContent ~ id:", id);
-  // useEffect(() => {});
+  const decode = jwt.verify(token!, "Secret");
+  const id = decode.id;
+  console.log("🚀 ~ ShareContent ~ id:", id as string);
+
+  useEffect(() => {}, []);
 
   return (
     <div>
       <h1>This is Share Page</h1>
-      {/* <Card /> */}
+      <p>The id of card is {id as string}</p>
     </div>
   );
 };
