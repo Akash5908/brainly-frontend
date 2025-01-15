@@ -1,4 +1,5 @@
 "use client";
+import { IconProps } from "@/lib/types";
 import React, { useState } from "react";
 
 const ShareIcon = (props: IconProps) => {
@@ -13,7 +14,6 @@ const ShareIcon = (props: IconProps) => {
       alert("Something went wrong");
     }
   };
-
   const handleShareClick = () => {
     if (props.fun) {
       try {
