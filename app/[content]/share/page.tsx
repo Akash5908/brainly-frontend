@@ -1,20 +1,74 @@
 "use client";
+
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import jwt from "jsonwebtoken";
+import { useEffect, useState } from "react";
+
+import Card from "@/app/component/ui/card";
+import { cardInterface } from "@/lib/types";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+
 const ShareContent = () => {
   const pathName = useSearchParams();
-  const token = pathName.get("token");
-  const decode = jwt.verify(token!, "Secret");
-  const id = decode.id;
-  console.log("🚀 ~ ShareContent ~ id:", id as string);
+  const [shareCards, setShareCards] = useState<cardInterface[]>([]);
+  const [error, setError] = useState("");
+  const Cardtoken = pathName.get("Cardtoken");
+  const { data: session } = useSession();
+  useEffect(() => {
+    // Only proceed if Cardtoken and token are available
+    if (Cardtoken && session?.accessToken) {
+      const fetchSharedCard = async () => {
+        try {
+          console.log("Before the API call");
+          const res = await axios.get(`http://localhost:3001/content/share`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.accessToken}`,
+            },
+            params: {
+              Cardtoken,
+            },
+          });
+          setShareCards([res.data.shareCardData]);
+        } catch (error) {
+          console.error("Error fetching shared card:", error);
+          setError("Error in getting the card");
+        }
+      };
 
-  useEffect(() => {}, []);
+      fetchSharedCard();
+    } else {
+      if (!Cardtoken) setError("Invalid URL - Missing token");
+      if (!session?.accessToken) setError("Token is  - Missing token");
+    }
+  }, [Cardtoken, session]);
+
+  if (error) {
+    return <h1>{error}</h1>;
+  }
 
   return (
     <div>
-      <h1>This is Share Page</h1>
-      <p>The id of card is {id as string}</p>
+      <div className="h-5/6 overflow-y-scroll no-scrollbar ">
+        <div className="flex gap-3 flex-wrap justify-around bg-green-400  on-scrollbar"></div>
+        {shareCards.length > 0 ? (
+          shareCards.map((item: cardInterface, index: number) => {
+            return (
+              <Card
+                type={item.type}
+                title={item.title}
+                key={index}
+                describtion={item.describtion}
+                tags={item.tags}
+                link={item.link}
+                id={item._id}
+              />
+            );
+          })
+        ) : (
+          <h1>No shared cards available</h1>
+        )}
+      </div>
     </div>
   );
 };

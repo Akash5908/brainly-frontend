@@ -15,7 +15,8 @@ const Card = (props: cardInterface) => {
         <p>{props.describtion}</p>
       </div>
       <div className="flex  gap-2 overflow-x-auto no-scrollbar ">
-        {props.tags.length > 0 &&
+        {props.tags &&
+          props.tags.length > 0 &&
           props.tags.map((tag, index) => <Tag text={tag} key={index} />)}
       </div>
 

@@ -18,8 +18,10 @@ interface ContentContextInterface {
     id: string;
     CardData: cardInterface;
   }) => void;
+  shareCards: cardInterface[];
   deleteCard: (id: string) => void;
   shareCard: (id: string) => void;
+  getCard: (CardToken: string) => void;
 }
 
 const ContentsContext = createContext<ContentContextInterface | undefined>(
@@ -34,8 +36,11 @@ export const ContentProvider = ({
   const [contents, setContents] = useState<cardInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [shareCards, setShareCards] = useState<cardInterface[]>([]);
   const { data: session } = useSession();
   const token = session?.accessToken;
+
+  const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const fetchContent = () => {
     setLoading(true);
@@ -157,28 +162,61 @@ export const ContentProvider = ({
     }
   };
 
-  const shareContent = (id: string) => {
-    console.log("Inside the shareContent", id);
-    setLoading(true);
+  const getShareCard = (Cardtoken: string): void => {
+    // setLoading(true);
     setError(null);
-
     try {
-      const response = axios
-        .get(`http://localhost:3001/content/share?id=${id}`, {
+      console.log("Beofe the api call");
+      axios
+        .get(`http://localhost:3001/content/share`, {
           headers: {
-            "Content-Type": "application-json",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+          },
+          params: {
+            Cardtoken,
           },
         })
         .then((res) => {
-          setLoading(false);
-          const shareUrl = res.data.url;
-          console.log("🚀 ~ shareContent ~ shareUrl:", shareUrl);
-          return shareUrl;
+          setShareCards((prev) => [...prev, res.data]);
+        })
+        .catch((error) => {
+          setError("Error in getting the card");
+          return null;
         });
     } catch (error) {
-      setError("Error in making the sharable link");
+      setError("Something Went wrong can connet to Database");
     }
+  };
+
+  const shareContent = (id: string): Promise<string | null> => {
+    setLoading(true);
+    setError(null);
+
+    return axios
+      .post(
+        `http://localhost:3001/content/share`,
+        {
+          CardId: id,
+          userId: session?.id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // Fixed typo
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setLoading(false);
+        return response.data.url;
+      })
+      .catch((error) => {
+        setLoading(false);
+        setError("Error in making the sharable link");
+        console.error("Error fetching share link:", error);
+        return null;
+      });
   };
 
   useEffect(() => {
@@ -195,7 +233,9 @@ export const ContentProvider = ({
         addContent,
         updateContent,
         deleteCard: deleteContent,
+        shareCards,
         shareCard: shareContent,
+        getCard: getShareCard,
       }}
     >
       {children}

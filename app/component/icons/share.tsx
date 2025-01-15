@@ -1,11 +1,9 @@
 "use client";
 import { IconProps } from "@/lib/types";
-import React, { useState } from "react";
 
 const ShareIcon = (props: IconProps) => {
-  const [shareLink, setShareLink] = useState("");
   const sClass = `h-${props.size}`;
-
+  const cardId = props.cardData?.id;
   const handleCopShareLink = (link: string) => {
     if (link) {
       navigator.clipboard.writeText(link);
@@ -16,18 +14,24 @@ const ShareIcon = (props: IconProps) => {
   };
   const handleShareClick = () => {
     if (props.fun) {
-      try {
-        const link = props.fun(props.cardData?.id).then(() => {
-          handleCopShareLink(link);
+      props
+        .fun(cardId)
+        .then((link: string) => {
+          console.log("got the ");
+          if (link) {
+            console.log("🚀 ~ .then ~ link:", link);
+            handleCopShareLink(link);
+          } else {
+            alert("Failed to generate share link.");
+          }
+        })
+        .catch((error: Error) => {
+          console.error("Error fetching share link:", error);
+          alert("Failed to generate share link.");
         });
-
-        // Pass the resolved link to the copy function
-      } catch (error) {
-        console.error("Error fetching share link:", error);
-        alert("Failed to generate share link.");
-      }
     }
   };
+
   return (
     <div onClick={handleShareClick} className="flex flex-start">
       <svg
