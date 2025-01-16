@@ -4,7 +4,7 @@ import React from "react";
 const ImageIcon = (props: IconProps) => {
   const size = `h-${props.size}`;
   return (
-    <div className="flex gap-2 m-0 p-0 bg-purple-500">
+    <div className="flex gap-2 m-0 p-0">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

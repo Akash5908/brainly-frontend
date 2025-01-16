@@ -4,7 +4,7 @@ import { IconProps } from "../../../lib/types";
 const DocumentIcon = (props: IconProps) => {
   const s = `h-${props.size}`;
   return (
-    <div className="flex gap-2 m-0 p-0 bg-purple-500">
+    <div className="sidebarstyle ">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
