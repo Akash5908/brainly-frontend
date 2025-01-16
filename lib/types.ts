@@ -10,6 +10,7 @@ export interface IconProps {
   size: string;
   fun?: any;
   cardData?: cardInterface;
+  text?: string;
 }
 
 export interface cardInterface {

@@ -1,6 +1,12 @@
 import React from "react";
 import BookmarkIcon from "../icons/bookmark";
 import Xicon from "../icons/xicon";
+import ImageIcon from "../icons/image";
+import VideoIcon from "../icons/video";
+import ArticleIcon from "../icons/article";
+import DocumentIcon from "../icons/document";
+import YoutubeIcon from "../icons/youtube";
+import LinkIcon from "../icons/link";
 
 const SideBar = () => {
   return (
@@ -16,18 +22,14 @@ const SideBar = () => {
             <Xicon />
             <p className="font-light text-md">Tweets</p>
           </div>
-          <div className="flex gap-2">
-            <Xicon />
-            <p className="font-medium">Tweets</p>
-          </div>
-          <div className="flex gap-2">
-            <Xicon />
-            <p className="font-medium">Tweets</p>
-          </div>
-          <div className="flex gap-2">
-            <Xicon />
-            <p className="font-medium">Tweets</p>
-          </div>
+
+          <ImageIcon size={"5"} text="Images" />
+
+          <VideoIcon size={"5"} text="Video" />
+          <ArticleIcon size={"5"} text="Article" />
+          <DocumentIcon size={"5"} text="Document" />
+          <YoutubeIcon size={"5"} text="Youtube" />
+          <LinkIcon size={"5"} text="Link" />
         </div>
       </div>
     </div>

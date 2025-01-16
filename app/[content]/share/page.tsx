@@ -39,7 +39,6 @@ const ShareContent = () => {
       fetchSharedCard();
     } else {
       if (!Cardtoken) setError("Invalid URL - Missing token");
-      if (!session?.accessToken) setError("Token is  - Missing token");
     }
   }, [Cardtoken, session]);
 
