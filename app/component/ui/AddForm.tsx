@@ -98,7 +98,7 @@ const AppForm = ({
               : cardData?.id && editModalFun(cardData.id);
           }}
         >
-          <Xicon />
+          <Xicon size="5" />
         </button>
       }
       <form onSubmit={handleSubmit(submitForm)} className="space-y-4">

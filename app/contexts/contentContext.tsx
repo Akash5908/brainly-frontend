@@ -1,5 +1,12 @@
 "use client";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { cardInterface } from "@/lib/types";
 
 import axios from "axios";
@@ -19,6 +26,8 @@ interface ContentContextInterface {
     CardData: cardInterface;
   }) => void;
   shareCards: cardInterface[];
+  searchCards: cardInterface[];
+  setSearchCards: Dispatch<SetStateAction<cardInterface[]>>;
   deleteCard: (id: string) => void;
   shareCard: (id: string) => void;
   getCard: (CardToken: string) => void;
@@ -37,6 +46,7 @@ export const ContentProvider = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [shareCards, setShareCards] = useState<cardInterface[]>([]);
+  const [searchCards, setSearchCards] = useState<cardInterface[]>([]);
   const { data: session } = useSession();
   const token = session?.accessToken;
 
@@ -235,6 +245,8 @@ export const ContentProvider = ({
         deleteCard: deleteContent,
         shareCards,
         shareCard: shareContent,
+        searchCards,
+        setSearchCards: setSearchCards,
         getCard: getShareCard,
       }}
     >

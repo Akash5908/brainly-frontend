@@ -26,13 +26,13 @@ const SideBar = () => {
   return (
     <div className=" border-solid border-r  border-gray-500 w-1/5 h-screen">
       <div className="flex flex-col gap-8 bg-red-400 font-mono  h-full pl-4 pt-4 ">
-        <div className="">
+        <div onClick={() => router.push("/")}>
           <BookmarkIcon size="8" text={"Second Brain"} />
         </div>
         <div className="grid gap-4 ">
           <div
             onClick={() => {
-              router.push(`?type=${newUrl("tweets")}`);
+              router.push(`?${newUrl("tweets")}`);
             }}
           >
             <Xicon size={"5"} text="Tweets" />
