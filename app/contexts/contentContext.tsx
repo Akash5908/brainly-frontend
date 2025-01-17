@@ -9,14 +9,17 @@ import React, {
 } from "react";
 import { cardInterface } from "@/lib/types";
 
+
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
 interface ContentContextInterface {
   content: cardInterface[];
+  tag: tagInterface[];
   loading: boolean;
   error: string | null;
   getContent: () => void;
+  getTags: () => void;
   addContent?: (newCard: cardInterface) => void;
   updateContent?: ({
     id,
@@ -45,6 +48,7 @@ export const ContentProvider = ({
   children: React.ReactNode;
 }) => {
   const [contents, setContents] = useState<cardInterface[]>([]);
+  const [tags, setTags] = useState<tagInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [userShareCards, setUserShareCards] = useState<cardInterface[]>([]);
@@ -71,6 +75,21 @@ export const ContentProvider = ({
 
           setContents(data);
         });
+    } catch (error) {
+      setError("Error in fetching the Card");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchTags = () => {
+    setLoading(true);
+    setError(null);
+    try {
+      axios.get(`http://localhost:3001/content/tags`).then((res) => {
+        const data = res.data.content;
+
+        setTags(data);
+      });
     } catch (error) {
       setError("Error in fetching the Card");
     } finally {
@@ -255,17 +274,20 @@ export const ContentProvider = ({
 
   useEffect(() => {
     fetchContent();
+    fetchTags();
   }, [session]);
 
   return (
     <ContentsContext.Provider
       value={{
         content: contents,
+        tag: tags,
         loading,
         error,
         getContent: fetchContent,
         addContent,
         updateContent,
+        getTags: fetchTags,
         deleteCard: deleteContent,
         shareCards,
         shareCard: shareContent,

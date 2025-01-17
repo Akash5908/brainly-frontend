@@ -24,6 +24,11 @@ export interface cardInterface {
   userId?: string;
 }
 
+export interface tagInterface {
+  title: string[];
+  _id?: string;
+}
+
 export interface fromModal {
   modalState: boolean;
   formShow: () => void;
