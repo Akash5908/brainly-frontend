@@ -76,7 +76,7 @@ const AppForm = ({
     if (addContent && formType == "add") {
       (() => {
         addContent(data);
-        console.log(data);
+
         console.log("error valeu", error);
       })();
       if (!error) {
@@ -132,7 +132,6 @@ const AppForm = ({
           </label>
           <select
             {...register("type")}
-            // type="text"
             id="type"
             name="type"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -229,7 +228,6 @@ const AppForm = ({
                   onKeyDown={(e) => {
                     const target = e.target as HTMLInputElement; // Explicitly cast e.target
                     if (e.key === "Enter") {
-                      // e.preventDefault(); // Prevent form submission
                       const newTag = target.value.trim();
                       if (newTag) {
                         setTagArray((prevData) => [...prevData, newTag]); // Add new tag to the array
@@ -248,8 +246,11 @@ const AppForm = ({
                       .map((item) => (
                         <div
                           onClick={() => {
+                            const newArray = [...tagArray, item];
                             setTagArray((prevData) => [...prevData, item]); // Add new tag to the array
-                            field.onChange(""); // Reset the input field in the form
+                            setTimeout(() => {
+                              field.onChange(newArray); // Reset the input field in the form
+                            }, 500);
                           }}
                           className="border-[1px] bg-black text-white rounded-sm shadow-sm p-2"
                         >

@@ -7,8 +7,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { cardInterface } from "@/lib/types";
-
+import { cardInterface, tagInterface } from "@/lib/types";
 
 import axios from "axios";
 import { useSession } from "next-auth/react";

@@ -20,6 +20,7 @@ export interface cardInterface {
   tags: string[] | [];
   link: string;
   id?: string | null;
+  createdDate: string;
   _id?: string;
   userId?: string;
 }
