@@ -21,6 +21,7 @@ export interface cardInterface {
   link: string;
   id?: string | null;
   _id?: string;
+  userId?: string;
 }
 
 export interface tagInterface {

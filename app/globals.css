@@ -82,3 +82,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .sidebarstyle {
+    @apply flex items-center gap-2 m-0 p-0 cursor-pointer;
+  }
+}

@@ -25,6 +25,7 @@ export default function Home() {
               tags={item.tags}
               link={item.link}
               id={item._id}
+              userId={item.userId}
             />
           ))}
         </div>

@@ -113,7 +113,7 @@ const AppForm = ({
               : cardData?.id && editModalFun(cardData.id);
           }}
         >
-          <Xicon />
+          <Xicon size="5" />
         </button>
       }
       <form

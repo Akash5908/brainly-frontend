@@ -3,7 +3,7 @@ import { IconProps } from "@/lib/types";
 
 const ShareIcon = (props: IconProps) => {
   const sClass = `h-${props.size}`;
-  const cardId = props.cardData?.id;
+  const cardData = props.cardData;
   const handleCopShareLink = (link: string) => {
     if (link) {
       navigator.clipboard.writeText(link);
@@ -15,11 +15,10 @@ const ShareIcon = (props: IconProps) => {
   const handleShareClick = () => {
     if (props.fun) {
       props
-        .fun(cardId)
+        .fun(cardData)
         .then((link: string) => {
           console.log("got the ");
           if (link) {
-            console.log("🚀 ~ .then ~ link:", link);
             handleCopShareLink(link);
           } else {
             alert("Failed to generate share link.");

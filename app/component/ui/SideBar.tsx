@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import BookmarkIcon from "../icons/bookmark";
 import Xicon from "../icons/xicon";
@@ -8,28 +9,76 @@ import DocumentIcon from "../icons/document";
 import YoutubeIcon from "../icons/youtube";
 import LinkIcon from "../icons/link";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 const SideBar = () => {
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+
+  const newUrl = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("type", value);
+
+    return params.toString();
+  };
+
   return (
     <div className=" border-solid border-r  border-gray-500 w-1/5 h-screen">
-      <div className="flex-col  bg-red-400 gap-8  h-full pl-4 pt-4">
-        <div className="flex text-bold gap-3">
-          <BookmarkIcon />
-
-          <h1 className="font-bold text-xl">Second Brain</h1>
+      <div className="flex flex-col gap-8 bg-red-400 font-mono  h-full pl-4 pt-4 ">
+        <div onClick={() => router.push("/")}>
+          <BookmarkIcon size="8" text={"Second Brain"} />
         </div>
-        <div className="grid gap-4">
-          <div className="flex gap-2">
-            <Xicon />
-            <p className="font-light text-md">Tweets</p>
+        <div className="grid gap-4 ">
+          <div
+            onClick={() => {
+              router.push(`?${newUrl("tweets")}`);
+            }}
+          >
+            <Xicon size={"5"} text="Tweets" />
           </div>
-
-          <ImageIcon size={"5"} text="Images" />
-
-          <VideoIcon size={"5"} text="Video" />
-          <ArticleIcon size={"5"} text="Article" />
-          <DocumentIcon size={"5"} text="Document" />
-          <YoutubeIcon size={"5"} text="Youtube" />
-          <LinkIcon size={"5"} text="Link" />
+          <div
+            onClick={() => {
+              router.push(`?${newUrl("image")}`);
+            }}
+          >
+            <ImageIcon size={"5"} text="Images" />
+          </div>
+          <div
+            onClick={() => {
+              router.push(`?${newUrl("videos")}`);
+            }}
+          >
+            <VideoIcon size={"5"} text="Video" />
+          </div>
+          <div
+            onClick={() => {
+              router.push(`?${newUrl("article")}`);
+            }}
+          >
+            <ArticleIcon size={"5"} text="Article" />
+          </div>
+          <div
+            onClick={() => {
+              router.push(`?${newUrl("documents")}`);
+            }}
+          >
+            <DocumentIcon size={"5"} text="Document" />
+          </div>
+          <div
+            onClick={() => {
+              router.push(`?${newUrl("youtube")}`);
+            }}
+          >
+            <YoutubeIcon size={"5"} text="Youtube" />
+          </div>
+          <div
+            onClick={() => {
+              router.push(`?${newUrl("links")}`);
+            }}
+          >
+            <LinkIcon size={"5"} text="Link" />
+          </div>
         </div>
       </div>
     </div>
