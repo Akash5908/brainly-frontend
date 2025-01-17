@@ -5,12 +5,24 @@ import Tag from "./tag";
 import CardHeader from "./cardHeader";
 import { cardInterface } from "@/lib/types";
 
+function videoQuery(link: string): string {
+  const embedCode = link.split("=")[1];
+  return embedCode;
+}
 const Card = (props: cardInterface) => {
   return (
     <div className="flex flex-col gap-3 p-3 w-64 h-fit bg-slate-500 rounded-lg overflow-hidden ">
       {/* card header */}
       <CardHeader cardData={props} />
       {/* Card Content */}
+      {props.type === "youtube" && (
+        <div>
+          <iframe
+            className="w-full h-full rounded-sm"
+            src={`https://www.youtube.com/embed/${videoQuery(props.link)}`}
+          ></iframe>
+        </div>
+      )}
       <div>
         <p>{props.describtion}</p>
       </div>
