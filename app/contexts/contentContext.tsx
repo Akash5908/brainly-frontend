@@ -29,8 +29,10 @@ interface ContentContextInterface {
   searchCards: cardInterface[];
   setSearchCards: Dispatch<SetStateAction<cardInterface[]>>;
   deleteCard: (id: string) => void;
-  shareCard: (id: string) => void;
+  shareCard: (cardData: cardInterface) => void;
   getCard: (CardToken: string) => void;
+  userShareCards: cardInterface[];
+  getShareCards: (userId: string) => void;
 }
 
 const ContentsContext = createContext<ContentContextInterface | undefined>(
@@ -45,6 +47,7 @@ export const ContentProvider = ({
   const [contents, setContents] = useState<cardInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [userShareCards, setUserShareCards] = useState<cardInterface[]>([]);
   const [shareCards, setShareCards] = useState<cardInterface[]>([]);
   const [searchCards, setSearchCards] = useState<cardInterface[]>([]);
   const { data: session } = useSession();
@@ -199,7 +202,8 @@ export const ContentProvider = ({
     }
   };
 
-  const shareContent = (id: string): Promise<string | null> => {
+  const shareContent = (cardData: cardInterface): Promise<string | null> => {
+    console.log("🚀 ~ cardData:", cardData);
     setLoading(true);
     setError(null);
 
@@ -207,8 +211,7 @@ export const ContentProvider = ({
       .post(
         `http://localhost:3001/content/share`,
         {
-          CardId: id,
-          userId: session?.id,
+          cardData,
         },
         {
           headers: {
@@ -227,6 +230,27 @@ export const ContentProvider = ({
         console.error("Error fetching share link:", error);
         return null;
       });
+  };
+
+  const getUserShareCards = (userId: string): void => {
+    console.log("Enter the getUserShare cara req");
+    try {
+      axios
+        .get(`${backendURL}/user/share`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            id: userId,
+          },
+        })
+        .then((res) => {
+          setUserShareCards((prev) => [...prev, ...res.data.data]);
+        });
+    } catch (error) {
+      setError("Error in getting the shared Cards");
+    }
   };
 
   useEffect(() => {
@@ -248,6 +272,8 @@ export const ContentProvider = ({
         searchCards,
         setSearchCards: setSearchCards,
         getCard: getShareCard,
+        userShareCards,
+        getShareCards: getUserShareCards,
       }}
     >
       {children}
