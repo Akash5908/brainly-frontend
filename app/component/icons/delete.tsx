@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { IconProps } from "../../../lib/types";
-import { useSession } from "next-auth/react";
 
 const DeleteIcon = (props: IconProps) => {
   const s = `h-${props.size}`;

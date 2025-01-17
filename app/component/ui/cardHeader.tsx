@@ -8,11 +8,13 @@ import EditIcon from "../icons/edit";
 import { useFormModal } from "@/app/contexts/formModalContext";
 import AddForm from "./AddForm";
 import { cardInterface } from "@/lib/types";
+import { usePathname } from "next/navigation";
 
 const CardHeader = ({ cardData }: { cardData: cardInterface }) => {
-  const { deleteCard, shareCard } = useContents();
+  const { deleteCard, shareCard, deleteShareCard } = useContents();
   const { editModalState, editModalFun } = useFormModal();
   const { formState, cardId } = editModalState;
+  const pathName = usePathname();
 
   return (
     <div className="flex justify-between">
@@ -20,14 +22,18 @@ const CardHeader = ({ cardData }: { cardData: cardInterface }) => {
         <ShareIcon size="6" />
         <p> {cardData.title}</p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 ">
         <ShareIcon size="4" fun={shareCard} cardData={cardData} />
         <EditIcon size="4" fun={editModalFun} cardData={cardData} />
         <DeleteIcon
           size="4"
           fun={() => {
             console.log("Delete content");
-            {
+            if (pathName === "/share") {
+              console.log("Share");
+              deleteShareCard(cardData.id!, cardData.userId!);
+            } else {
+              console.log("Not");
               cardData.id && deleteCard(cardData.id);
             }
           }}

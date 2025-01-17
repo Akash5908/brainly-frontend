@@ -5,11 +5,8 @@ const YoutubeIcon = (props: IconProps) => {
   const size = `h-${props.size}`;
   const router = useRouter();
   const pathName = usePathname();
-  console.log("🚀 ~ YoutubeIcon ~ pathName:", pathName);
 
   //   const params = new URLSearchParams(pathName.toString());
-  //   console.log("🚀 ~ YoutubeIcon ~ params:", params);
-
   return (
     <div
       onClick={() => {
