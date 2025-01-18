@@ -57,14 +57,16 @@ export const ContentProvider = ({
   const { data: session } = useSession();
   const token = session?.accessToken;
 
+  const id = session?.id;
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
+  console.log(session?.id);
   const fetchContent = () => {
     setLoading(true);
     setError(null);
+    console.log(session?.id);
     try {
       axios
-        .get(`http://localhost:3001/content?id=${session?.id}`, {
+        .get(`http://localhost:3001/content?id=${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

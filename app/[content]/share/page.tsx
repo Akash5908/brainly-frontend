@@ -57,6 +57,7 @@ const ShareContent = () => {
                 type={item.type}
                 title={item.title}
                 key={index}
+                createdDate={item.createdDate}
                 describtion={item.describtion}
                 tags={item.tags}
                 link={item.link}
