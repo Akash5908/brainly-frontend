@@ -78,7 +78,7 @@ const Navbar = (props: Props) => {
             />
           )}
           <Button
-            fun={() => router.push("/user/share")}
+            fun={() => router.push("/share")}
             text={"Share Brain"}
             px={"5"}
             height={"11"}

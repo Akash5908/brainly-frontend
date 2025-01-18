@@ -18,7 +18,7 @@ const Card = (props: cardInterface) => {
       {props.type === "youtube" && (
         <div>
           <iframe
-            className="w-full h-full rounded-sm"
+            className="w-full h-full rounded-md"
             src={`https://www.youtube.com/embed/${videoQuery(props.link)}`}
           ></iframe>
         </div>

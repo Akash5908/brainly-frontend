@@ -29,7 +29,7 @@ const ShareContent = () => {
               Cardtoken,
             },
           });
-          setShareCards([res.data.shareCardData]);
+          setShareCards((prev) => [...prev, ...res.data.shareCardData]);
         } catch (error) {
           console.error("Error fetching shared card:", error);
           setError("Error in getting the card");

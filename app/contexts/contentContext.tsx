@@ -35,6 +35,7 @@ interface ContentContextInterface {
   getCard: (CardToken: string) => void;
   userShareCards: cardInterface[];
   getShareCards: (userId: string) => void;
+  deleteShareCard: (cardId: string, userId: string) => void;
 }
 
 const ContentsContext = createContext<ContentContextInterface | undefined>(
@@ -251,6 +252,7 @@ export const ContentProvider = ({
   };
 
   const getUserShareCards = (userId: string): void => {
+    console.log("🚀 ~ getUserShareCards ~ userId:", userId);
     console.log("Enter the getUserShare cara req");
     try {
       axios
@@ -269,6 +271,31 @@ export const ContentProvider = ({
     } catch (error) {
       setError("Error in getting the shared Cards");
     }
+  };
+
+  const deleteShareCard = (cardId: string, userId: string) => {
+    axios
+      .delete(
+        `${backendURL}/content/share`,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            id: cardId,
+            userId,
+          },
+        }
+      )
+      .then(() => {
+        const UpdateShareCards = userShareCards.filter(
+          (item) => item._id !== cardId
+        );
+        console.log("🚀 ~ .then ~ UpdateShareCards:", UpdateShareCards);
+        setUserShareCards(UpdateShareCards);
+      });
   };
 
   useEffect(() => {
@@ -295,6 +322,7 @@ export const ContentProvider = ({
         getCard: getShareCard,
         userShareCards,
         getShareCards: getUserShareCards,
+        deleteShareCard,
       }}
     >
       {children}

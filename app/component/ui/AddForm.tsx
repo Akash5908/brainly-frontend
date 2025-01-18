@@ -185,7 +185,6 @@ const AppForm = ({
           </label>
           <textarea
             {...register("describtion")}
-            // type="text"
             id="describtion"
             placeholder="Example:- This note contain wikipedia page data."
             name="describtion"
