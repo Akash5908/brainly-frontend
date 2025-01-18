@@ -13,7 +13,7 @@ export default function Home() {
   const type = query.get("type");
   console.log("🚀 ~ Home ~ type:", type);
   useEffect(() => {
-    if (type) {
+    if (type !== null) {
       const filter = content.filter((item) => item.type == type);
       console.log("🚀 ~ useEffect ~ filter:", filter);
       setFilterContent(filter);
@@ -21,7 +21,7 @@ export default function Home() {
       console.log(content);
       setFilterContent(content);
     }
-  }, [type]);
+  }, [type, content]);
   if (loading) {
     <h1>Loading</h1>;
   } else if (error) {

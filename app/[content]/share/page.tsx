@@ -14,6 +14,7 @@ const ShareContent = () => {
   const [error, setError] = useState("");
   const Cardtoken = pathName.get("Cardtoken");
   const { data: session } = useSession();
+  console.log(session?.accessToken);
   useEffect(() => {
     // Only proceed if Cardtoken and token are available
     if (Cardtoken && session?.accessToken) {
