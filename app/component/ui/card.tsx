@@ -34,7 +34,9 @@ const Card = (props: cardInterface) => {
 
       {/* Date when the card add */}
       <div>
-        <p className="text-xs font-light text-gray-600">Added on 04/01/2025</p>
+        <p className="text-xs font-light text-gray-600">
+          Added on {props.createdDate}
+        </p>
       </div>
     </div>
   );

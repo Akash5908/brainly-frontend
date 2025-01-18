@@ -42,6 +42,7 @@ export default function Home() {
               link={item.link}
               id={item._id}
               userId={item.userId}
+              createdDate={item.createdDate}
             />
           ))}
         </div>
